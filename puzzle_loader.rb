@@ -37,7 +37,7 @@ class PuzzleLoader
 
   def correct_number_of_lines?
     line_count = %x(sed -n '=' #{@filename} | wc -l).to_i
-    raise 'Rows must be divisible by 9.' unless line_count % 9 == 0
+    raise 'Rows must be equal to 9.' unless line_count == 9
   end
 
   def valid_contents?
@@ -47,7 +47,7 @@ class PuzzleLoader
     File.foreach(@filename) do |line|
       just_text = line.chomp
       raise 'Invalid file content.' unless just_text.count(range) == just_text.length && \
-        just_text.length % 9 == 0
+        just_text.length == 9
     end
     true
   end
