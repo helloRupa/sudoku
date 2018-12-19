@@ -12,7 +12,6 @@ class Board
     puzzle_arr = PuzzleLoader.from_file(filename)
     @board = populate(puzzle_arr)
     fill_box_arrays
-    render
   end
 
   def render
