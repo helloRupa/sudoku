@@ -5,7 +5,7 @@ require 'colorize'
 require 'set'
 
 class Board
-  BOX_ARRAYS = []
+  BOX_ARRAYS = [] # populate and freeze in init
   attr_accessor :board
 
   def initialize(filename)
@@ -29,6 +29,7 @@ class Board
     end
   end
 
+  # returns true if updated, false otherwise
   def update_tile(pos, value)
     x, y = pos
     @board[y][x].set_value(value)
@@ -50,7 +51,7 @@ class Board
     BOX_ARRAYS.freeze
   end
 
-  def add_space_around_boxes(idx, &block)
+  def add_space_around_boxes(idx, &_block)
     yield if '25'.include?(idx.to_s)
   end
 
