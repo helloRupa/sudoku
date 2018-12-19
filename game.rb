@@ -9,9 +9,16 @@ class Game
 
   def play
     until @board.board_solved?
-      # play game
+      @board.render
+      turn
+      @board.render
     end
     puts 'Good job! You solved the puzzle!'
+  end
+
+  def turn
+    value, coords = get_input
+    @board.update_tile(coords, value)
   end
 
   # First get value, then prompt for coords
@@ -26,10 +33,10 @@ class Game
   end
 
   def valid_value
-    value = gets.chomp.to_i
+    value = gets.chomp
     until in_range?(value)
-      puts 'Please enter a number from 1-9:'
-      value = gets.chomp.to_i
+      puts 'Please enter a number from 0-9:'
+      value = gets.chomp
     end
     value
   end
@@ -49,12 +56,13 @@ class Game
     input.split(',').map(&:to_i)
   end
 
+  # update tile with dummy value to see if valid
   def not_locked?(coords)
-    @board.update_tile(coords, 2)
+    @board.update_tile(coords, '2')
   end
 
   def in_range?(value)
-    (0..9).cover?(value)
+    (0..9).cover?(value) || ('0'..'9').cover?(value)
   end
 
   def yx_in_range?(coords)
@@ -64,6 +72,5 @@ end
 
 if $PROGRAM_NAME == __FILE__
   test = Game.new('puzzles/sudoku1_almost.txt')
-  puts 'Provide coords'
-  test.valid_coords
+  test.play
 end
