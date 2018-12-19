@@ -18,6 +18,8 @@ class Game
     puts 'Good job! You solved the puzzle!'
   end
 
+  private
+
   def show_board
     @board.render
     puts
