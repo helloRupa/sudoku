@@ -30,7 +30,7 @@ class Board
 
   # returns true if updated, false otherwise
   def update_tile(pos, value)
-    x, y = pos
+    y, x = pos
     @board[y][x].set_value(value)
   end
 
