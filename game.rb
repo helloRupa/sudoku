@@ -4,16 +4,23 @@ require_relative 'board.rb'
 class Game
   def initialize(filename)
     @board = Board.new(filename)
-    # play
+    welcome
+    play
   end
 
   def play
     until @board.board_solved?
-      @board.render
+      clear_screen
+      show_board
       turn
-      @board.render
     end
+    show_board
     puts 'Good job! You solved the puzzle!'
+  end
+
+  def show_board
+    @board.render
+    puts
   end
 
   def turn
@@ -23,7 +30,7 @@ class Game
 
   # First get value, then prompt for coords
   def get_input
-    print 'Please enter a value from 1 to 9: '
+    print 'Please enter a value from 0 to 9: '
     value = valid_value
     puts
     print 'Please enter coordinates in y, x format: '
@@ -68,9 +75,22 @@ class Game
   def yx_in_range?(coords)
     in_range?(coords[0]) && in_range?(coords[1])
   end
+
+  def clear_screen
+    system('clear')
+  end
+
+  def pause
+    sleep(2)
+  end
+
+  def welcome
+    clear_screen
+    puts 'Welcome to Sudoku! Hope you know how to count...'
+    pause
+  end
 end
 
 if $PROGRAM_NAME == __FILE__
-  test = Game.new('puzzles/sudoku1_almost.txt')
-  test.play
+  Game.new('puzzles/sudoku1.txt')
 end
