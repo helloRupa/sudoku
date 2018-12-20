@@ -5,30 +5,39 @@ class PuzzleLoader
 
   def initialize(filename)
     @filename = filename
-    valid_filetype?
     file_exists?
-    correct_number_of_lines?
-    valid_contents?
   end
 
   def self.from_file(filename)
     # read and parse file into 2D array
-    new(filename)
+    puzzle = new(filename)
+    filetype = puzzle.filetype_to_s
+
+    case filetype
+    when '.txt'
+      puzzle.check_txt
+      puzzle.process_txt
+    else
+      p filetype
+      raise 'Unsupported file.'
+    end
+  end
+
+  def check_txt
+    correct_number_of_lines?
+    valid_contents?
+  end
+
+  def process_txt
     puzzle_arr = []
-    File.foreach(filename) do |line|
+    File.foreach(@filename) do |line|
       puzzle_arr << line.chomp.split('')
     end
     puzzle_arr
   end
 
-  def valid_filetype?
-    filetype = /\.\w+$/.match(@filename)[0]
-    case filetype
-    when '.txt'
-      true
-    else
-      raise 'File type not supported. Goodbye.'
-    end
+  def filetype_to_s
+    /\.\w+$/.match(@filename)[0]
   end
 
   def file_exists?
