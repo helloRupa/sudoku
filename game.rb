@@ -67,7 +67,7 @@ class Game
 
   # update tile with dummy value to see if valid
   def not_locked?(coords)
-    @board.update_tile(coords, '2')
+    @board.update_tile(coords, '0')
   end
 
   def in_range?(value)
