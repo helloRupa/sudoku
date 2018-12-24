@@ -2,20 +2,24 @@
 require_relative 'board.rb'
 require 'set'
 
-# Clean up code, break out big methods into smaller
-# Don't call new to initiate, call Solver::solve
-
 class Solver < Board
   RANGE = ('1'..'9').to_a
+
+  private_class_method :new
 
   def initialize(filename)
     @sudoku = Board.new(filename)
     @board = @sudoku.board
     @possibilities = {}
-    render
-    populate_possibilities
-    fill_board
-    render
+  end
+
+  def self.solve(filename)
+    puzzle = new(filename)
+    puzzle.render
+    puts
+    puzzle.populate_possibilities
+    puzzle.fill_board
+    puzzle.render
   end
 
   def populate_possibilities
@@ -41,19 +45,23 @@ class Solver < Board
     until board_solved?
       y, x = all_coords[coord_idx]
       tile = tile(y, x)
-      val_idx = @possibilities[[y, x]].index(tile.value)
-      if val_idx.nil?
-        update_tile([y, x], @possibilities[[y, x]][0])
-      elsif val_idx == @possibilities[[y, x]].length - 1
-        update_tile([y, x], '0')
+      val_idx = @possibilities[[y, x]].index(tile.value) || -1
+      if end_of_array(val_idx, y, x, coord_idx)
         coord_idx -= 1
-        raise 'Unsolveable puzzle' if coord_idx < 0
         next
-      else
-        update_tile([y, x], @possibilities[[y, x]][val_idx + 1])
       end
+      update_tile([y, x], @possibilities[[y, x]][val_idx + 1])
       coord_idx += 1 if valid_value?(y, x)
     end
+  end
+
+  def end_of_array(val_idx, y, x, coord_idx)
+    if val_idx == @possibilities[[y, x]].length - 1
+      update_tile([y, x], '0')
+      raise 'Unsolveable puzzle' if coord_idx.zero?
+      return true
+    end
+    false
   end
 
   def valid_value?(y, x)
@@ -110,6 +118,4 @@ class Solver < Board
   end
 end
 
-if $PROGRAM_NAME == __FILE__
-  Solver.new('puzzles/sudoku_unsolvable_puzzle.txt')
-end
+Solver.solve('puzzles/sudoku3.txt') if $PROGRAM_NAME == __FILE__
